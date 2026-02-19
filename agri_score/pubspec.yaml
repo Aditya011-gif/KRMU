@@ -1,0 +1,51 @@
+name: agri_score
+description: "AI-powered rural agricultural land intelligence and credit risk assessment"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Supabase
+  supabase_flutter: ^2.8.0
+
+  # Networking
+  dio: ^5.7.0
+
+  # Maps
+  google_maps_flutter: ^2.10.0
+
+  # Location
+  geolocator: ^13.0.2
+  geocoding: ^3.0.0
+
+  # Charts
+  fl_chart: ^0.70.2
+
+  # UI Utilities
+  shimmer: ^3.0.0
+  google_fonts: ^6.2.1
+  animated_text_kit: ^4.2.2
+  percent_indicator: ^4.2.3
+  intl: ^0.19.0
+
+  # Storage
+  shared_preferences: ^2.3.4
+  file_picker: ^10.3.10
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

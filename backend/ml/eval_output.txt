@@ -1,0 +1,102 @@
+=================================================================
+   ML MODEL ACCURACY EVALUATION REPORT
+=================================================================
+
+📂 Dataset: 5000 samples, 12 columns
+   Train set: 4000 samples
+   Test  set: 1000 samples
+
+✅ All 4 models loaded successfully from disk.
+
+=================================================================
+ 📈  MODEL 1: Agri Trust Score Regressor
+=================================================================
+   Mean Absolute Error (MAE) : 3.20 points
+   Root Mean Sq Error (RMSE) : 4.03 points
+   R² Score                  : 0.9549  (95.5%)
+   Mean Abs % Error (MAPE)   : 5.92%
+
+   Predictions within ±5 pts : 78.0%
+   Predictions within ±10 pts: 99.0%
+
+=================================================================
+ 🌾  MODEL 2: Crop Quality Classifier
+=================================================================
+
+   Overall Accuracy: 0.8140  (81.4%)
+
+              precision    recall  f1-score   support
+
+   Excellent       0.93      0.81      0.87       219
+        Good       0.78      0.87      0.82       367
+    Moderate       0.76      0.81      0.78       294
+        Poor       0.93      0.66      0.77       120
+
+    accuracy                           0.81      1000
+   macro avg       0.85      0.79      0.81      1000
+weighted avg       0.82      0.81      0.81      1000
+
+   Confusion Matrix:
+                  Excellent        Good    Moderate        Poor
+   Excellent            178          41           0           0
+   Good                  13         320          34           0
+   Moderate               0          51         237           6
+   Poor                   0           0          41          79
+
+=================================================================
+ ⚠️   MODEL 3: Risk Level Classifier
+=================================================================
+
+   Overall Accuracy: 0.8740  (87.4%)
+
+              precision    recall  f1-score   support
+
+        High       0.94      0.57      0.71       120
+         Low       0.92      0.90      0.91       392
+      Medium       0.83      0.93      0.88       488
+
+    accuracy                           0.87      1000
+   macro avg       0.90      0.80      0.83      1000
+weighted avg       0.88      0.87      0.87      1000
+
+   Confusion Matrix:
+                       High         Low      Medium
+   High                  68           0          52
+   Low                    0         352          40
+   Medium                 4          30         454
+
+=================================================================
+ 📉  MODEL 4: NDVI Trend Classifier
+=================================================================
+
+   Overall Accuracy: 0.9410  (94.1%)
+
+              precision    recall  f1-score   support
+
+    Decrease       0.95      0.99      0.97       449
+    Increase       0.97      0.97      0.97       412
+      Stable       0.83      0.72      0.77       139
+
+    accuracy                           0.94      1000
+   macro avg       0.92      0.89      0.90      1000
+weighted avg       0.94      0.94      0.94      1000
+
+   Confusion Matrix:
+                   Decrease    Increase      Stable
+   Decrease             443           0           6
+   Increase               0         398          14
+   Stable                25          14         100
+
+=================================================================
+ ✅  OVERALL ACCURACY SUMMARY
+=================================================================
+   Model                               Metric            Value
+   ----------------------------------- ------------ ----------
+   Agri Trust Score Regressor          R² Score     0.9549
+   Agri Trust Score Regressor          MAE          3.20
+   Crop Quality Classifier             Accuracy     81.4%
+   Risk Level Classifier               Accuracy     87.4%
+   NDVI Trend Classifier               Accuracy     94.1%
+
+   Average Classifier Accuracy: 87.6%
+=================================================================
