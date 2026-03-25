@@ -6,7 +6,9 @@ import 'package:intl/intl.dart';
 import '../../config/app_config.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/analysis_provider.dart';
+import '../../providers/land_details_provider.dart';
 import '../../providers/fraud_risk_provider.dart';
+import '../../services/mock_fraud_data.dart';
 import '../widgets/score_indicator.dart';
 import '../widgets/risk_badge.dart';
 import '../widgets/dashboard_widgets.dart';
@@ -43,6 +45,20 @@ class _FarmerDashboardState extends ConsumerState<FarmerDashboard> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF6F8F6), // Background Light from HTML
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'mock_fraud_fab',
+        onPressed: () => _showMockScenarioPicker(context),
+        backgroundColor: const Color(0xFF1B5E20),
+        icon: const Icon(Icons.bug_report_rounded, color: Colors.white),
+        label: Text(
+          'Test Fraud',
+          style: GoogleFonts.inter(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
+      ),
       body: SafeArea(
         child: RefreshIndicator(
           color: const Color(AppConfig.primaryGreen),
@@ -531,6 +547,160 @@ class _FarmerDashboardState extends ConsumerState<FarmerDashboard> {
           ),
         ),
       ),
+    );
+  }
+
+  // ── Mock Fraud Scenario Picker ──────────────────────────
+  void _showMockScenarioPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 30),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '🧪 Load Fraud Test Scenario',
+                style: GoogleFonts.outfit(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(AppConfig.textDark),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Tap to inject mock data into the fraud engine',
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: const Color(AppConfig.textMuted),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ...MockFraudData.allScenarios.map((name) {
+                final label = MockFraudData.scenarioLabels[name]!;
+                final scenario = MockFraudData.getScenario(name);
+                final colors = {
+                  'clean': const Color(0xFF2E7D32),
+                  'moderate': const Color(0xFFFFA000),
+                  'high': const Color(0xFFD32F2F),
+                  'max': const Color(0xFF880E4F),
+                };
+                final icons = {
+                  'clean': Icons.verified_rounded,
+                  'moderate': Icons.warning_amber_rounded,
+                  'high': Icons.gpp_bad_rounded,
+                  'max': Icons.dangerous_rounded,
+                };
+                final color = colors[name]!;
+                final icon = icons[name]!;
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      ref
+                          .read(analysisProvider.notifier)
+                          .loadMockData(scenario.analysis);
+                      ref
+                          .read(landDetailsProvider.notifier)
+                          .loadMockData(scenario.land);
+                      Navigator.pop(ctx);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Loaded: $label',
+                            style: GoogleFonts.inter(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          backgroundColor: color,
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.06),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: color.withOpacity(0.15)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: color.withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(icon, color: color, size: 22),
+                          ),
+                          const SizedBox(width: 14),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  label,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: const Color(AppConfig.textDark),
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  'Rules: ${name == "clean"
+                                      ? "None"
+                                      : name == "moderate"
+                                      ? "R₁ + R₃"
+                                      : name == "high"
+                                      ? "R₁ + R₂ + R₄"
+                                      : "All 4 rules"}',
+                                  style: GoogleFonts.inter(
+                                    fontSize: 11,
+                                    color: const Color(AppConfig.textMuted),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: 16,
+                            color: color.withOpacity(0.5),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 

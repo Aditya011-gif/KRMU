@@ -1,0 +1,5 @@
+{
+  "buildCommand": "bash build.sh",
+  "outputDirectory": "public",
+  "installCommand": "echo 'Install step is handled within buildCommand'"
+}

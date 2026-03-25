@@ -193,6 +193,11 @@ class LandDetailsNotifier extends StateNotifier<LandDetailsState> {
   void clearMessages() {
     state = state.copyWith(error: null, successMessage: null);
   }
+
+  /// Load mock data for testing (e.g. fraud detection scenarios).
+  void loadMockData(LandDetailsModel mockLand) {
+    state = state.copyWith(registrations: [mockLand, ...state.registrations]);
+  }
 }
 
 final landDetailsProvider =

@@ -83,6 +83,14 @@ class AnalysisNotifier extends StateNotifier<AnalysisState> {
   void clearError() {
     state = state.copyWith(error: null);
   }
+
+  /// Load mock data for testing (e.g. fraud detection scenarios).
+  void loadMockData(AnalysisModel mockAnalysis) {
+    state = state.copyWith(
+      latestResult: mockAnalysis,
+      history: [mockAnalysis, ...state.history],
+    );
+  }
 }
 
 final analysisProvider = StateNotifierProvider<AnalysisNotifier, AnalysisState>(
